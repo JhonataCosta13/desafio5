@@ -5,6 +5,7 @@ import br.com.banco.model.Conta;
 import br.com.banco.model.dto.ContaDTO;
 import br.com.banco.model.dto.ContaInputDTO;
 import br.com.banco.repository.ContaRepository;
+import br.com.banco.service.exception.ObjetoNaoEncontradoException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,8 @@ public class ContaService {
     }
 
     public ContaDTO buscarContaPorId(Long id) {
-        Conta conta = contaRepository.findById(id).get();
+        Conta conta = contaRepository.findById(id).
+                orElseThrow( () -> new ObjetoNaoEncontradoException("Usuário Não Encontrado. ID: "+ id));
         return modelMapper.map(conta, ContaDTO.class);
     }
 }
