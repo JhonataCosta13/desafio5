@@ -3,6 +3,7 @@ package br.com.banco.controller;
 import br.com.banco.model.Conta;
 import br.com.banco.model.dto.ContaDTO;
 import br.com.banco.model.dto.ContaInputDTO;
+import br.com.banco.model.dto.TransferenciaInputDTO;
 import br.com.banco.service.ContaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +40,12 @@ public class ContaController {
     @GetMapping("/{id}")
     public ResponseEntity<ContaDTO> buscarConta(@PathVariable("id") Long id){
         ContaDTO contaDTO = contaService.buscarContaPorId(id);
+        return ResponseEntity.ok().body(contaDTO);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ContaDTO> adicionarTransferencia(@PathVariable("id") Long id, @RequestBody TransferenciaInputDTO transferenciaInputDTO){
+        ContaDTO contaDTO = contaService.vincularTransferencias(id, transferenciaInputDTO);
         return ResponseEntity.ok().body(contaDTO);
     }
 }

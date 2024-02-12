@@ -23,9 +23,9 @@ public class TransferenciaController {
     private TransferenciaService transferenciaService;
 
     @PostMapping
-    public ResponseEntity<?> criarTransferencia(@RequestBody TransferenciaInputDTO transferenciaInputDTO){
+    public ResponseEntity<?> criarTransferencia(@RequestBody TransferenciaDTO transferenciaDTO){
 
-        Transferencia transferenciaOutput = transferenciaService.salvarTransferencia(transferenciaInputDTO);
+        Transferencia transferenciaOutput = transferenciaService.salvarTransferencia(transferenciaDTO);
         URI location = UriComponentsBuilder.
                 fromUriString("http://localhost:8080/transferencia/{id}").
                 buildAndExpand(transferenciaOutput.getId()).toUri();

@@ -2,9 +2,7 @@ package br.com.banco.service;
 
 import br.com.banco.model.Conta;
 import br.com.banco.model.Transferencia;
-import br.com.banco.model.dto.ContaDTO;
 import br.com.banco.model.dto.TransferenciaDTO;
-import br.com.banco.model.dto.TransferenciaInputDTO;
 import br.com.banco.repository.TransferenciaRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +19,7 @@ public class TransferenciaService {
     @Autowired
     private ModelMapper modelMaper;
 
-    public Transferencia salvarTransferencia(TransferenciaInputDTO transferenciaInputDTO) {
+    public Transferencia salvarTransferencia(TransferenciaDTO transferenciaInputDTO) {
         Transferencia transferenciaInput = modelMaper.map(transferenciaInputDTO, Transferencia.class);
         transferenciaRepository.save(transferenciaInput);
         return transferenciaInput;
@@ -32,5 +30,14 @@ public class TransferenciaService {
         List<TransferenciaDTO> transferenciasDTO = transferencias.stream()
                 .map(t -> modelMaper.map(t, TransferenciaDTO.class)).toList();
         return transferenciasDTO;
+    }
+
+    public List<Transferencia> buscarTransferenciaPorId(List<Long> transferenciaIds) {
+        return transferenciaRepository.findAllById(transferenciaIds);
+    }
+
+    public void vinculaConta(List<Transferencia> transferencias, Conta conta) {
+        transferencias.stream().forEach(t -> t.setConta(conta));
+        transferenciaRepository.saveAll(transferencias);
     }
 }
