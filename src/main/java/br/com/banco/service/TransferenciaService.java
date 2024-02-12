@@ -1,6 +1,7 @@
 package br.com.banco.service;
 
 import br.com.banco.model.Conta;
+import br.com.banco.model.Filtro;
 import br.com.banco.model.Transferencia;
 import br.com.banco.model.dto.TransferenciaDTO;
 import br.com.banco.repository.TransferenciaRepository;
@@ -18,6 +19,8 @@ public class TransferenciaService {
 
     @Autowired
     private ModelMapper modelMaper;
+
+    private Filtro filtro;
 
     public Transferencia salvarTransferencia(TransferenciaDTO transferenciaInputDTO) {
         Transferencia transferenciaInput = modelMaper.map(transferenciaInputDTO, Transferencia.class);
@@ -40,4 +43,12 @@ public class TransferenciaService {
         transferencias.stream().forEach(t -> t.setConta(conta));
         transferenciaRepository.saveAll(transferencias);
     }
+
+    public List<Transferencia> buscarPorData(Conta conta, Filtro filtro) {
+        return conta.getTransferencias().
+                stream().filter(t  -> (t.getDataTransferencia().isBefore(filtro.getFimPeriodo())) &&
+                        (t.getDataTransferencia().isAfter(filtro.getInicioPeriodo())
+                        || t.getNomeOperadorTransacao().equals(filtro.getNomeOperador()))).toList();
+    }
+
 }

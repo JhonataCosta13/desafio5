@@ -1,6 +1,7 @@
 package br.com.banco.controller;
 
 import br.com.banco.model.Conta;
+import br.com.banco.model.Filtro;
 import br.com.banco.model.dto.ContaDTO;
 import br.com.banco.model.dto.ContaInputDTO;
 import br.com.banco.model.dto.TransferenciaInputDTO;
@@ -37,9 +38,16 @@ public class ContaController {
         return ResponseEntity.ok().body(contasDTO);
     }
 
-    @GetMapping("/{id}")
+   /* @GetMapping("/{id}")
     public ResponseEntity<ContaDTO> buscarConta(@PathVariable("id") Long id){
         ContaDTO contaDTO = contaService.buscarContaPorId(id);
+        return ResponseEntity.ok().body(contaDTO);
+    }*/
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ContaDTO> buscarContaTransferencias(@PathVariable("id") Long id){
+        Filtro filtro = new Filtro();
+        ContaDTO contaDTO = contaService.buscaComFiltro(id, filtro);
         return ResponseEntity.ok().body(contaDTO);
     }
 

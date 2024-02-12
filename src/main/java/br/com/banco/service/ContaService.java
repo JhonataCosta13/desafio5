@@ -1,7 +1,7 @@
 package br.com.banco.service;
 
-import br.com.banco.config.ModelMapperConfig;
 import br.com.banco.model.Conta;
+import br.com.banco.model.Filtro;
 import br.com.banco.model.Transferencia;
 import br.com.banco.model.dto.ContaDTO;
 import br.com.banco.model.dto.ContaInputDTO;
@@ -12,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,6 +26,7 @@ public class ContaService {
 
     @Autowired
     private ModelMapper modelMapper;
+
 
     public Conta salvarConta(ContaInputDTO contaInputDTO) {
         Conta contaInput = modelMapper.map(contaInputDTO, Conta.class);
@@ -52,5 +54,20 @@ public class ContaService {
         conta.setTransferencias(transferencias);
         conta = contaRepository.save(conta);
         return modelMapper.map(conta, ContaDTO.class);
+    }
+
+    public ContaDTO buscaComFiltro(Long id, Filtro filtro){
+        Conta conta = contaRepository.findById(id).
+                orElseThrow( () -> new ObjetoNaoEncontradoException("Usuário Não Encontrado. ID: "+ id));
+        List<Transferencia> transferencias = new ArrayList<>();
+
+        if((filtro.getFimPeriodo() != null && filtro.getInicioPeriodo() != null) || (filtro.getNomeOperador() != null)){
+            transferencias = transferenciaService.buscarPorData(conta, filtro);
+            conta.setTransferencias(transferencias);
+            return modelMapper.map(conta, ContaDTO.class);
+        }
+        else{
+            return modelMapper.map(conta, ContaDTO.class);
+        }
     }
 }
