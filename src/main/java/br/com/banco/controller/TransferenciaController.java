@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -34,8 +35,12 @@ public class TransferenciaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TransferenciaDTO>> buscarTransferencias(){
-        List<TransferenciaDTO> transferenciasDTO = transferenciaService.buscarTodos();
+    public ResponseEntity<List<TransferenciaDTO>> buscarTransferencias(
+            @RequestParam (name = "inicioPeriodo", required = false) LocalDate inicioPeriodo,
+            @RequestParam (name = "fimPeriodo", required = false) LocalDate fimoPeriodo,
+            @RequestParam (name = "nomeOperador", required = false) String nomeOperador
+            ){
+        List<TransferenciaDTO> transferenciasDTO = transferenciaService.buscarTodos(inicioPeriodo, fimoPeriodo, nomeOperador);
         return ResponseEntity.ok().body(transferenciasDTO);
     }
 }

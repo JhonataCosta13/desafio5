@@ -56,18 +56,4 @@ public class ContaService {
         return modelMapper.map(conta, ContaDTO.class);
     }
 
-    public ContaDTO buscaComFiltro(Long id, Filtro filtro){
-        Conta conta = contaRepository.findById(id).
-                orElseThrow( () -> new ObjetoNaoEncontradoException("Usuário Não Encontrado. ID: "+ id));
-        List<Transferencia> transferencias = new ArrayList<>();
-
-        if((filtro.getFimPeriodo() != null && filtro.getInicioPeriodo() != null) || (filtro.getNomeOperador() != null)){
-            transferencias = transferenciaService.buscarPorData(conta, filtro);
-            conta.setTransferencias(transferencias);
-            return modelMapper.map(conta, ContaDTO.class);
-        }
-        else{
-            return modelMapper.map(conta, ContaDTO.class);
-        }
-    }
 }

@@ -9,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -28,8 +29,8 @@ public class TransferenciaService {
         return transferenciaInput;
     }
 
-    public List<TransferenciaDTO> buscarTodos() {
-        List<Transferencia> transferencias = transferenciaRepository.findAll();
+    public List<TransferenciaDTO> buscarTodos(LocalDate inicioPeriodo, LocalDate fimPeriodo, String nomeOperador) {
+        List<Transferencia> transferencias = transferenciaRepository.findAll(inicioPeriodo, fimPeriodo, nomeOperador);
         List<TransferenciaDTO> transferenciasDTO = transferencias.stream()
                 .map(t -> modelMaper.map(t, TransferenciaDTO.class)).toList();
         return transferenciasDTO;
@@ -44,11 +45,5 @@ public class TransferenciaService {
         transferenciaRepository.saveAll(transferencias);
     }
 
-    public List<Transferencia> buscarPorData(Conta conta, Filtro filtro) {
-        return conta.getTransferencias().
-                stream().filter(t  -> (t.getDataTransferencia().isBefore(filtro.getFimPeriodo())) &&
-                        (t.getDataTransferencia().isAfter(filtro.getInicioPeriodo())
-                        || t.getNomeOperadorTransacao().equals(filtro.getNomeOperador()))).toList();
-    }
 
 }
